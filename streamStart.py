@@ -77,41 +77,67 @@ def get_authenticated_service():
 
 youtube = get_authenticated_service()
 
-list_broadcasts_response = youtube.liveBroadcasts().list(
-broadcastStatus="upcoming",
-part="id,snippet,status",
-maxResults=4
+insert_broadcast_response = youtube.liveBroadcasts().update(
+    part="id,snippet,status,contentDetails",
+    body=dict(
+        id=os.environ.get('YOUTUBE_LIVE_EVENT_ID'),
+        snippet=dict(
+            title='New Day Naz - Sunday Service 2',
+        ),
+        status=dict(
+            privacyStatus="public"
+        ),
+        contentDetails=dict(
+            monitorStream=dict(
+                enableMonitorStream=True,
+                broadcastStreamDelayMs=0
+            ),
+            enableDvr=True,
+            enableContentEncryption=False,
+            enableEmbed=True,
+            recordFromStart=True,
+            startWithSlate=False
+        )
+    )
 ).execute()
 
-result=[]
-for broadcast in list_broadcasts_response.get("items", []):
-  print broadcast['snippet']['title'] + " " + broadcast['snippet']['scheduledStartTime']
-  transition_result = youtube.liveBroadcasts().transition(
-      broadcastStatus='testing',
-      id=broadcast['id'],
-      part='id,snippet,status'
-  ).execute()
-  result.append(transition_result)
+print insert_broadcast_response
 
-while True:
-  for res in result:
-    print "index " + str(result.index(res))
-    print res
-    if res['status']['lifeCycleStatus'] == 'testStarting':
-      continue
-    else:
-      print res['id']
-      print "Going Live"
-      transition_result = youtube.liveBroadcasts().transition(
-          broadcastStatus='live',
-          id=broadcast['id'],
-          part='id,snippet'
-      ).execute()
-      print transition_result
-      result.pop(result.index(res))
-      if len == 0:
-        break
-  time.sleep(2)
+# list_broadcasts_response = youtube.liveBroadcasts().list(
+# broadcastStatus="upcoming",
+# part="id,snippet,status",
+# maxResults=4
+# ).execute()
+
+# result=[]
+# for broadcast in list_broadcasts_response.get("items", []):
+#   print broadcast['snippet']['title'] + " " + broadcast['snippet']['scheduledStartTime']
+#   transition_result = youtube.liveBroadcasts().transition(
+#       broadcastStatus='testing',
+#       id=broadcast['id'],
+#       part='id,snippet,status'
+#   ).execute()
+#   result.append(transition_result)
+
+# while True:
+#   for res in result:
+#     print "index " + str(result.index(res))
+#     print res
+#     if res['status']['lifeCycleStatus'] == 'testStarting':
+#       continue
+#     else:
+#       print res['id']
+#       print "Going Live"
+#       transition_result = youtube.liveBroadcasts().transition(
+#           broadcastStatus='live',
+#           id=broadcast['id'],
+#           part='id,snippet'
+#       ).execute()
+#       print transition_result
+#       result.pop(result.index(res))
+#       if len == 0:
+#         break
+#   time.sleep(2)
 
 #    print "len " + str(len(result))
 #
