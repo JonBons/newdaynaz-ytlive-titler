@@ -63,6 +63,8 @@ def get_authenticated_service():
   flow = OAuth2WebServerFlow(client_id=os.environ.get('GOOGLE_CLIENT_ID'),
     client_secret=os.environ.get('GOOGLE_CLIENT_SECRET'),
     redirect_uri='http://localhost',
+    access_type='offline',
+    approval_prompt='force',
     scope=YOUTUBE_READ_WRITE_SCOPE,
     message=MISSING_CLIENT_SECRETS_MESSAGE)
 
