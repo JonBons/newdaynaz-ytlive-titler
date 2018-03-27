@@ -82,7 +82,7 @@ insert_broadcast_response = youtube.liveBroadcasts().update(
     body=dict(
         id=os.environ.get('YOUTUBE_LIVE_EVENT_ID'),
         snippet=dict(
-            title='New Day Naz - Sunday Service 2',
+            title='New Day Naz - ' + datetime.datetime.today().strftime('%A') + ' Service (' + datetime.datetime.today().strftime('%b %d, %Y') + ')',
         ),
         status=dict(
             privacyStatus="public"
