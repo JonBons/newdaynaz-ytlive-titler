@@ -60,8 +60,9 @@ def myconverter(o):
       return o.strftime("%Y-%m-%dT%H:%M:%S+01:00")
 
 def get_authenticated_service():
-  flow = OAuth2WebServerFlow(client_id=ENV['GOOGLE_CLIENT_ID'],
-    client_secret=ENV['GOOGLE_CLIENT_SECRET'],
+  flow = OAuth2WebServerFlow(client_id=GOOGLE_CLIENT_ID,
+    client_secret=GOOGLE_CLIENT_SECRET,
+    redirect_uri='http://localhost',
     scope=YOUTUBE_READ_WRITE_SCOPE,
     message=MISSING_CLIENT_SECRETS_MESSAGE)
 
